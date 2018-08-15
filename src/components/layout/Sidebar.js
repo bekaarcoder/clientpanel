@@ -6,7 +6,7 @@ class Sidebar extends Component {
     return (
       <div>
         <Link to="/client/add" className="btn btn-sm btn-block btn-success">
-          <i class="fas fa-plus fa-sm"></i> Add New
+          <i className="fas fa-plus fa-sm"></i> Add New
         </Link>
       </div>
     )

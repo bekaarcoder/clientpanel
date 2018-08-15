@@ -1,24 +1,44 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {firestoreConnect} from 'react-redux-firebase';
+import PropTypes from 'prop-types'
 
 class ClientsList extends Component {
+  state = {
+    totalOwed: null
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    const {clients} = props;
+    if(clients) {
+      const total = clients.reduce((total, current) => {
+        return total + parseFloat(current.balance.toString());
+      }, 0);
+      return {
+        totalOwed: total
+      };
+    }
+  }
+
+  // this method is going to be deprecated
+  /* componentWillReceiveProps(nextProps) {
+    if(nextProps.clients) {
+      const total = nextProps.clients.reduce((total, current) => {
+        return total + parseFloat(current.balance.toString());
+      }, 0);
+      this.setState({
+        totalOwed: total
+      });
+    }
+  } */
+
   render() {
-    const clients = [{
-      id: '234234234',
-      firstName: 'Shashank',
-      lastName: 'Sharma',
-      email: 'shashanksmat@gmail.com',
-      phone: '8574378987',
-      balance: '30'
-    }, {
-      id: '12312413',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'johnd@gmail.com',
-      phone: '1234567890',
-      balance: '303'
-    }];
+    const {clients} = this.props;
+    const {totalOwed} = this.state;
     let clientsContent;
-    if(clients && clients.length !==0) {
+    if(clients && clients.length !== 0) {
       clientsContent = (
         <table className="table table-hover mt-4">
           <thead>
@@ -51,10 +71,23 @@ class ClientsList extends Component {
     return (
       <div>
         <h2 className="lead">Clients</h2>
+        {totalOwed !== null &&
+          <div className="text-right"><strong>Total Owed: </strong>Rs.{parseFloat(totalOwed).toFixed(2)}</div>
+        }
         {clientsContent}
       </div>
     )
   }
 }
 
-export default ClientsList;
+ClientsList.propTypes = {
+  clients: PropTypes.array,
+  firestore: PropTypes.object.isRequired
+}
+
+export default compose(
+  firestoreConnect([{collection: 'clients'}]),
+  connect((state, props) => ({
+    clients: state.firestore.ordered.clients
+  }))
+)(ClientsList);
