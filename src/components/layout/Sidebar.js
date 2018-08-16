@@ -5,7 +5,7 @@ class Sidebar extends Component {
   render() {
     return (
       <div>
-        <Link to="/client/add" className="btn btn-sm btn-block btn-success">
+        <Link to="/client/add-client" className="btn btn-sm btn-block btn-success">
           <i className="fas fa-plus fa-sm"></i> Add New
         </Link>
       </div>

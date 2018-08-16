@@ -57,7 +57,7 @@ class ClientsList extends Component {
                 <td>{client.email}</td>
                 <td>{client.phone}</td>
                 <td>{client.balance}</td>
-                <td><button className="btn btn-sm btn-secondary">View Details</button></td>
+                <td><Link to="/client/detail" className="btn btn-sm btn-secondary">View Details</Link></td>
               </tr>
             ))}
           </tbody>
