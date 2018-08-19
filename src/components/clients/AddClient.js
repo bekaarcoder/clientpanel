@@ -1,4 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
+import {firestoreConnect} from 'react-redux-firebase';
 
 class AddClient extends Component {
   state = {
@@ -8,6 +12,21 @@ class AddClient extends Component {
     phone: '',
     balance: ''
   };
+
+  onSubmit = e => {
+    e.preventDefault();
+    const newClient = this.state;
+    // if no balance added, make it zero
+    if(newClient.balance === '') {
+      newClient.balance = 0;
+    }
+    const {firestore, history} = this.props;
+    firestore.add({
+      collection: 'clients'
+    }, newClient).then(() => {
+      history.push('/');
+    });
+  }
 
   onChange = e => this.setState({[e.target.name]: e.target.value});
 
@@ -20,7 +39,7 @@ class AddClient extends Component {
             <div className="col-md-8">
               <div className="card">
                 <div className="card-body">
-                  <form>
+                  <form onSubmit = {this.onSubmit}>
                     <div className="form-group">
                       <label htmlFor="firstName">First Name</label>
                       <input
@@ -90,4 +109,8 @@ class AddClient extends Component {
   }
 }
 
-export default AddClient;
+AddClient.propTypes = {
+  firestore: PropTypes.object.isRequired
+};
+
+export default firestoreConnect()(AddClient);
