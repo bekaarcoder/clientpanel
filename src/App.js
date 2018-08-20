@@ -6,6 +6,7 @@ import AppNavbar from './components/layout/AppNavbar';
 import './App.css';
 import Dashboard from './components/layout/Dashboard';
 import AddClient from './components/clients/AddClient';
+import ClientDetails from './components/clients/ClientDetails';
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
               <Switch>
                 <Route path="/" component={Dashboard} exact />
                 <Route path="/client/add-client" component={AddClient} />
+                <Route path="/client/:id" component={ClientDetails} />
               </Switch>
             </div>
           </div>
